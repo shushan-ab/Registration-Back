@@ -4,7 +4,7 @@ Route::group([
     'prefix' => 'auth'
 ], function ($router) {
     Route::post('login', 'AuthController@login');
-    Route::post('logout', 'AuthController@logout');
+   // Route::post('logout', 'AuthController@logout');
     Route::post('refresh', 'AuthController@refresh');
     Route::post('me', 'AuthController@me');
     Route::post('payload', 'AuthController@payload');
@@ -12,24 +12,15 @@ Route::group([
     Route::post('signin', 'Auth\LoginController@login');
 });
 
-//Route::group([
-//    'middleware' => ['auth'],
-//], function ($router) {
-//    Route::post('admin', 'AdminController@index');
-//    Route::get('logout', 'AuthController@logout');
-//});
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('user', 'UserController@index');
-    Route::get('logout','AuthController@logout');
-    Route::post('addProduct','ProductController@add');
-    Route::get('getProducts','ProductController@get');
-    Route::post('orderedProducts','OrderedProductsController@order');
-    Route::get('getProductsFromCard','OrderedProductsController@get');
-    Route::delete('deleteOrderedProduct/{id}','OrderedProductsController@delete');
-});
+    Route::get('user/get-products','UserController@getProducts');
+    Route::get('user/get-ordered-products','UserController@getOrderedProducts');
+    Route::get('logout', 'AuthController@logout');
+    Route::resource('user', 'UserController'); // use Resoure routes, change routes, add all validations
 
 
-Route::middleware(['admin'])->group(function () {
-    Route::get('user', 'UserController@index');
+    Route::middleware(['admin'])->group(function () {
+        Route::resource('products', 'AdminController');
+    });
 });

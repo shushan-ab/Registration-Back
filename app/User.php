@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -22,7 +23,7 @@ class User extends Authenticatable implements JWTSubject
         'password',
         'confirmation',
         'address',
-        'roll'
+        'role_id'
     ];
 
     protected $appends = [
@@ -47,7 +48,6 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
     ];
     // Rest omitted for brevity
-
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *
@@ -73,9 +73,12 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(OrderedProduct::class, 'user_id', 'id');
     }
 
+    public function role()
+    {
+        return $this->hasOne(Role::class, 'id', 'role_id');
+    }
     public function getOrdersCountAttribute()
     {
         return $this->orderedProducts()->sum('product_quantity');
     }
-
 }

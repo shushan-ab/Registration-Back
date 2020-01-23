@@ -14,7 +14,7 @@
     </head>
     <body>
     <div>
-        Welcome
+        Welcomesdfghjk
     </div>
         <div>
              {{$reg}}
