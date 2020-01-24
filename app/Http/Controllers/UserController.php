@@ -23,7 +23,7 @@ class UserController extends Controller
         return response([
             'user' => $user
         ], 200);
-        //return $user;
+
     }
 
     /**
@@ -72,20 +72,22 @@ class UserController extends Controller
         $productId = $data['product_id'];
         $quantity = $data['number'];
         $ordersQuantity = 0;
+        $orderedProduct = OrderedProduct::where('product_id',$productId)->first();
+
 //        $product = Product::where('id', $productId)->where('quantity', '>=', $data['number'])->first();
         $product = Product::find($productId); //$product instanceof  Product
+//        return response ([
+//            '1' =>$product->quantity,
+//            '2' => $orderedProduct
+//        ]);
         if (isset($product) && !empty($product)) {
-            if ($product->quantity >= $quantity ) {
+            if ($product->quantity >= $orderedProduct['product_quantity']) {
+                Log::info('Product quantity is ok');
                 $user->load(['orderedProducts' => function ($query) use ($productId){
                     $query->where('product_id', $productId);
                 }]);
                 if (isset($user->orderedProducts) && count($user->orderedProducts) > 0) {
                     $ordered_product = $user->orderedProducts[0];
-                   // $ordered_product->product_quantity += $quantity;
-                   // return $ordered_product->product_quantity;
-//                    $ordered_product->save();
-                   // return $ordered_product;
-                  //  $ordered_product->save();
                     $ordered_product->update([
                         'product_quantity' => $ordered_product->product_quantity + $quantity
                     ]);

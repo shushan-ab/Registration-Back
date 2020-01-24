@@ -55,7 +55,7 @@ class LoginController extends Controller
             return $validator->messages();
         }
         $credentials = $request->only('email', 'password');
-       // $token = JWTAUTH::attempt($credentials);
+        //$token = JWTAUTH::attempt($credentials);
        // return $token;
         try {
             if (!$token = JWTAUTH::attempt($credentials)) {
